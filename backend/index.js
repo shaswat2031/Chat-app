@@ -22,7 +22,7 @@ app.use(express.urlencoded({ extended: true, limit: "10mb" }));
 app.use(cookieParser());
 app.use(
   cors({
-    origin: "https://chat-app-one-phi-62.vercel.app/",
+    origin: "https://chat-app-kappa-nine-84.vercel.app",
     credentials: true,
   })
 );
