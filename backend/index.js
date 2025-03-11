@@ -3,25 +3,34 @@ import dotenv from "dotenv";
 import cookieParser from "cookie-parser";
 import cors from "cors";
 import path from "path";
-import { fileURLToPath } from "url";
-
-import { connectDB } from "./src/lib/db.js";
-import authRoutes from "./src/routes/auth.route.js";
-import messageRoutes from "./src/routes/message.route.js";
-import { app, server } from "./src/lib/socket.js";
+import { connectDB } from "./lib/db.js";
+import authRoutes from "./routes/auth.route.js";
+import messageRoutes from "./routes/message.route.js";
+import { app, server } from "./lib/socket.js";
 
 dotenv.config();
 
-const PORT = process.env.PORT || 3000;
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+const PORT = process.env.PORT;
+const __dirname = path.resolve();
 
 app.use(express.json());
 app.use(cookieParser());
 app.use(
   cors({
-    origin: ["http://localhost:5173", "https://chat-app-kappa-nine-84.vercel.app"],
-    credentials: true,
+    origin: function (origin, callback) {
+      const allowedOrigins = [
+        "http://localhost:5173", // Dev frontend
+        "https://chat-app-kappa-nine-84.vercel.app", // Production frontend
+        "https://chat-app-k703.onrender.com", // Additional production frontend
+      ];
+
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error("Not allowed by CORS"));
+      }
+    },
+    credentials: true, // ✅ Important! This allows cookies (JWT) to be sent
   })
 );
 
@@ -37,6 +46,6 @@ if (process.env.NODE_ENV === "production") {
 }
 
 server.listen(PORT, () => {
-  console.log("Server is running on PORT:" + PORT);
+  console.log("server is running on PORT:" + PORT);
   connectDB();
 });
