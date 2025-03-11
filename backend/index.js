@@ -19,9 +19,9 @@ app.use(
   cors({
     origin: function (origin, callback) {
       const allowedOrigins = [
-        "http://localhost:5173", // Dev frontend
-        "https://chat-app-kappa-nine-84.vercel.app", // Production frontend
-        "https://chat-app-k703.onrender.com", // Additional production frontend
+        "http://localhost:5173",
+        "https://chat-app-kappa-nine-84.vercel.app",
+        "https://chat-app-k703.onrender.com",
       ];
 
       if (!origin || allowedOrigins.includes(origin)) {
@@ -30,7 +30,7 @@ app.use(
         callback(new Error("Not allowed by CORS"));
       }
     },
-    credentials: true, // ✅ Important! This allows cookies (JWT) to be sent
+    credentials: true,
   })
 );
 
