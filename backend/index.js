@@ -3,6 +3,7 @@ import dotenv from "dotenv";
 import cookieParser from "cookie-parser";
 import cors from "cors";
 import path from "path";
+import { fileURLToPath } from "url";
 
 import { connectDB } from "./src/lib/db.js";
 import authRoutes from "./src/routes/auth.route.js";
@@ -10,28 +11,23 @@ import messageRoutes from "./src/routes/message.route.js";
 import { app, server } from "./src/lib/socket.js";
 
 dotenv.config();
-const PORT = process.env.PORT || 5000;
-const __dirname = path.resolve();
 
-app.use(express.json({ limit: "10mb" })); 
-app.use(express.urlencoded({ extended: true, limit: "10mb" }));
+const PORT = process.env.PORT || 3000;
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
-// ✅ Use Cookie Parser
+app.use(express.json());
 app.use(cookieParser());
-
-// ✅ Proper CORS Configuration
 app.use(
   cors({
-    origin: "https://chat-app-kappa-nine-84.vercel.app", // Frontend URL
-    credentials: true, // Allow cookies
+    origin: ["http://localhost:5173", "https://chat-app-kappa-nine-84.vercel.app"],
+    credentials: true,
   })
 );
 
-// ✅ Routes
 app.use("/api/auth", authRoutes);
 app.use("/api/messages", messageRoutes);
 
-// ✅ Serve Frontend in Production (Render Deployment)
 if (process.env.NODE_ENV === "production") {
   app.use(express.static(path.join(__dirname, "../frontend/dist")));
 
@@ -40,8 +36,7 @@ if (process.env.NODE_ENV === "production") {
   });
 }
 
-// ✅ Start Server
 server.listen(PORT, () => {
-  console.log(`🚀 Server running on PORT: ${PORT}`);
+  console.log("Server is running on PORT:" + PORT);
   connectDB();
 });

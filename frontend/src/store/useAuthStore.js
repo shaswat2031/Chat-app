@@ -1,9 +1,11 @@
 import { create } from "zustand";
-import { axiosInstance } from "../lib/axios";
+import { axiosInstance } from "../lib/axios.js";
 import toast from "react-hot-toast";
 import { io } from "socket.io-client";
 
-const BASE_URL = import.meta.env.MODE === "development" ? "https://chat-app-k703.onrender.com" : "/";
+const BASE_URL = import.meta.env.MODE === "development" 
+  ? "http://localhost:5001" 
+  : "https://chat-app-k703.onrender.com";
 
 export const useAuthStore = create((set, get) => ({
   authUser: null,
@@ -76,7 +78,7 @@ export const useAuthStore = create((set, get) => ({
       toast.success("Profile updated successfully");
     } catch (error) {
       console.log("error in update profile:", error);
-      toast.error(error.response?.data?.message || "An error occurred");
+      toast.error(error.response.data.message);
     } finally {
       set({ isUpdatingProfile: false });
     }
