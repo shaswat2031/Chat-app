@@ -20,8 +20,19 @@ app.use(express.json());
 app.use(cookieParser());
 app.use(
   cors({
-    origin: ["http://localhost:5173", "https://chat-app-kappa-nine-84.vercel.app"],
-    credentials: true,
+    origin: function (origin, callback) {
+      const allowedOrigins = [
+        "http://localhost:5173", // Dev frontend
+        "https://chat-app-kappa-nine-84.vercel.app", // Production frontend
+      ];
+
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error("Not allowed by CORS"));
+      }
+    },
+    credentials: true, // ✅ Important! This allows cookies (JWT) to be sent
   })
 );
 
