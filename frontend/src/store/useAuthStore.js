@@ -1,18 +1,11 @@
 import { create } from "zustand";
-import axios from "axios";
 import toast from "react-hot-toast";
 import { io } from "socket.io-client";
+import axiosInstance from "../path/to/axiosInstance"; // Make sure to replace with the correct path
 
 const BASE_URL = import.meta.env.MODE === "development" 
   ? "http://localhost:5001" 
-  : "https://chat-app-k703.onrender.com";
-
-const axiosInstance = axios.create({
-  baseURL: import.meta.env.MODE === "development" 
-    ? "http://localhost:5001/api" 
-    : "https://chat-app-k703.onrender.com/api", // Or your deployed backend URL
-  withCredentials: true, // ✅ Allows cookies (JWT) to be sent
-});
+  : "https://chat-app-ujwm.vercel.app/";
 
 export const useAuthStore = create((set, get) => ({
   authUser: null,
